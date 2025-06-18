@@ -52,7 +52,7 @@ async def audio_test(ctx):
             await ctx.author.voice.channel.connect()
         else:
             ctx.voice_client.move_to(ctx.author.voice.channel)
-    audio_file="./audio/test.mp3"
+    audio_file="./audio/Maroon5-Animals0.mp3"
     ctx.voice_client.play(FFmpegPCMAudio(audio_file))
 
 @bot.command(name="pause",help="pause l'audio")
@@ -79,12 +79,19 @@ async def stop(ctx):
 
 ### le jeu
 
+LAST=None
+
 def getAudioFile(dif):
     if dif == None:
         dif=random.randint(0,2)
+    with open("music.txt","r") as file:
+        musics=file.read().splitlines()[:-1]
+        file.close()
+    music=musics[random.randint(0,len(musics)-1)]
+    return [music,dif,f"./audio/{music}{dif}.mp3"]
     
 
-@bot.command(name="game",help="le jeu")
+@bot.command(name="game",help="le jeu: \n rajouter apres une difficulté entre 0 et 2 sinon elle sera random\n0 = 5s\n1 = 3s\n2 = 1s")
 async def game(ctx,dif:int=None):
     if ctx.author.voice == None:
         await ctx.send("ya r")
@@ -95,6 +102,8 @@ async def game(ctx,dif:int=None):
         else:
             ctx.voice_client.move_to(ctx.author.voice.channel)
     audio_file=getAudioFile(dif)
-    ctx.voice_client.play(FFmpegPCMAudio(audio_file))
+    LAST=audio_file[:-1]
+    print(f"{LAST[0]} {LAST[1]}")
+    ctx.voice_client.play(FFmpegPCMAudio(audio_file[2]))
 
 bot.run(BOT_TOKEN)
