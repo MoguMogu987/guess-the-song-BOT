@@ -106,7 +106,7 @@ async def game(ctx,dif:int=None):
     print(f"{LAST[0]} {LAST[1]}")
     ctx.voice_client.play(FFmpegPCMAudio(audio_file[2]))
 
-@bot.command(name"last")
+@bot.command(name="last")
 async def last(ctx):
     if LAST == None:
         return
